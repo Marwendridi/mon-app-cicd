@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+        DOCKERHUB_CREDENTIALS = credentials('docker-hub')
         IMAGE_NAME = "tsallami/mon-app"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
@@ -26,6 +26,21 @@ pipeline {
                 sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
                 sh 'docker push $IMAGE_NAME:latest'
             }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh 'kubectl set image deployment/mon-app mon-app=$IMAGE_NAME:$IMAGE_TAG'
+                    sh 'kubectl rollout status deployment/mon-app'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker logout'
         }
     }
 }
