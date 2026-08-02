@@ -1,0 +1,4 @@
+kind-config.yaml
+kind-create.log
+kubeconfig-for-jenkins.yaml
+kubectl
