@@ -7,7 +7,7 @@ VERSION = os.environ.get("APP_VERSION", "dev")
 
 @app.route("/")
 def home():
-    return f"<h1>Pipeline Nightmare - Version final</h1>"
+    return f"<h1>Pipeline Nightmare - Version </h1>"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
